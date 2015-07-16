@@ -80,6 +80,8 @@ define(["underscore", "osu-audio"], function(_, OsuAudio) {
                             kaiMode: +parts[7]
                         };
                         if (t.millisecondsPerBeat < 0) {
+                            t.velocity = t.millisecondsPerBeat / -100;
+                            t.millisecondsPerBeat = this.timingPoints[0].millisecondsPerBeat * t.velocity;
                             t.inherited = 1;
                         }
                         this.timingPoints.push(t);
