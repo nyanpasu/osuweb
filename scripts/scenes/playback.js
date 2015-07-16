@@ -140,7 +140,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                 hit.objects.push(numberB);
             }
             // Note: combos > 99 hits are unsupported
-        }
+        };
 
         this.createSlider = function(hit) {
             var lastFrame = hit.keyframes[hit.keyframes.length - 1];
@@ -248,7 +248,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
 
                 hit.objects.push(reverse);
             }
-        }
+        };
 
         this.populateHit = function(hit) {
             // Creates PIXI objects for a given hit
@@ -262,7 +262,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                     self.createSlider(hit);
                     break;
             }
-        }
+        };
 
         for (var i = 0; i < this.hits.length; i++) {
             this.populateHit(this.hits[i]); // Prepare sprites and such
@@ -272,6 +272,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
         if (self.track.hitObjects.length > 0) {
             futuremost = self.track.hitObjects[0].time;
         }
+
         this.updateUpcoming = function(timestamp) {
             // Cache the next ten seconds worth of hit objects
             while (current < self.hits.length && futuremost < timestamp + (10 * TIME_CONSTANT)) {
@@ -298,7 +299,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                     _.each(hit.objects, function(o) { self.game.stage.removeChild(o); o.destroy(); });
                 }
             }
-        }
+        };
 
         this.updateHitCircle = function(hit, time) {
             var diff = hit.time - time;
@@ -326,7 +327,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
             }
 
             _.each(hit.objects, function(o) { o.alpha = alpha; });
-        }
+        };
 
         this.updateSlider = function(hit, time) {
             var diff = hit.time - time;
@@ -457,7 +458,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                         break;
                 }
             }
-        }
+        };
 
         this.render = function(timestamp) {
             var time = osu.audio.getPosition() * TIME_CONSTANT;
@@ -478,11 +479,11 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
             if (time !== 0) {
                 self.updateHitObjects(time);
             }
-        }
+        };
 
         this.teardown = function() {
             // TODO
-        }
+        };
 
         this.start = function() {
             self.started = true;
