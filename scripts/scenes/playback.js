@@ -176,6 +176,29 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                 objects: hit.objects
             });
             self.createHitCircle(hit); // Near end
+
+            // Result objects
+            hit.results = [];
+            // Far end
+            self.createHitCircle({
+                time: hit.time,
+                combo: hit.combo,
+                index: -1,
+                x: lastFrame.x,
+                y: lastFrame.y,
+                objects: hit.results
+            });
+            // Near end
+            self.createHitCircle({
+                time: hit.time,
+                combo: hit.combo,
+                index: -1,
+                x: hit.x,
+                y: hit.y,
+                objects: hit.results
+            });
+            _.each(hit.results, function(o) {hit.objects.push(o);});
+
             // Add follow circle
             var follow = hit.follow = new PIXI.Sprite(Resources["sliderfollowcircle.png"]);
             follow.visible = false;
@@ -261,6 +284,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                     futuremost = hit.time;
                 }
             }
+            // Despawn objects
             for (var i = 0; i < self.upcomingHits.length; i++) {
                 var hit = self.upcomingHits[i];
                 var diff = hit.time - timestamp;
@@ -307,6 +331,9 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
         this.updateSlider = function(hit, time) {
             var diff = hit.time - time;
             var alpha = 0;
+
+            _.each(hit.results, function(o) { o.visible = false; });
+
             if (diff <= NOTE_APPEAR && diff > NOTE_FULL_APPEAR) {
                 // Fade in (before hit)
                 alpha = diff / NOTE_APPEAR;
@@ -327,7 +354,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                 // Update approach circle
                 hit.approach.scale.x = ((diff / NOTE_APPEAR * 2) + 1) * 0.9;
                 hit.approach.scale.y = ((diff / NOTE_APPEAR * 2) + 1) * 0.9;
-            } else if (diff > NOTE_DISAPPEAR - hit.sliderTimeTotal) {
+            } else if (diff > -hit.sliderTimeTotal) {
                 // Update slider ball and reverse symbols
                 hit.approach.visible = false;
                 hit.follow.visible = true;
@@ -386,6 +413,12 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                     }
                 }
 
+            } else if (diff < -hit.sliderTimeTotal) {
+                // Expand results
+                _.each(hit.results, function(o) {
+                    o.visible = true;
+                    o.scale.x = o.scale.y = (diff + hit.sliderTimeTotal) / NOTE_DISAPPEAR * RESULT_EXPAND_SCALE + 1;
+                });
             }
 
             if (hit.reverse) {
@@ -400,7 +433,7 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                     o.alpha = alpha;
                 }
             });
-        }
+        };
 
         this.updateHitObjects = function(time) {
             self.updateUpcoming(time);
