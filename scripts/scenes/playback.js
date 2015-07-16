@@ -415,13 +415,12 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                 }
 
             } else if (diff < -hit.sliderTimeTotal) {
-                // Hide slider ball and follow circle
-                hit.follow.visible = false;
-                hit.follow.alpha = 0;
                 hit.ball.visible = false;
                 hit.ball.alpha = 0;
 
-                // Expand results
+                hit.follow.visible = true;
+                hit.follow.scale.x = hit.follow.scale.y = 1 - (diff + hit.sliderTimeTotal) / NOTE_DISAPPEAR * RESULT_EXPAND_SCALE;
+
                 _.each(hit.results, function(o) {
                     o.visible = true;
                     o.scale.x = o.scale.y = (diff + hit.sliderTimeTotal) / NOTE_DISAPPEAR * RESULT_EXPAND_SCALE + 1;
