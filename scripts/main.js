@@ -10,6 +10,9 @@ require(["scenes/need-files", "resources", "pixi"], function(NeedFiles, Resource
     window.SLIDER_BEZIER = "B";
     window.SLIDER_PASSTHROUGH = "P";
 
+    window.RESULT_EXPAND_SCALE = 0.5;
+    window.RESULT_SHRINK_SCALE = 0.5;
+
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
     PIXI.Sprite.prototype.bringToFront = function() {

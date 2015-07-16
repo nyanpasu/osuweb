@@ -289,11 +289,18 @@ define(["osu", "resources", "pixi", "curves/LinearBezier"], function(Osu, Resour
                 alpha -= 0.5; alpha = -alpha; alpha += 0.5;
             }
             if (diff <= NOTE_APPEAR && diff > 0) {
-                hit.approach.scale.x = ((diff / NOTE_APPEAR * 2) + 1) * 0.9;
-                hit.approach.scale.y = ((diff / NOTE_APPEAR * 2) + 1) * 0.9;
+                hit.approach.scale.x = hit.approach.scale.y = ((diff / NOTE_APPEAR * 2) + 1) * 0.9;
             } else {
                 hit.approach.scale.x = hit.objects[2].scale.y = 1;
             }
+
+            if (diff <= 0) {
+                // Expand
+                _.each(hit.objects, function(o) {
+                    o.scale.x = o.scale.y = diff / NOTE_DISAPPEAR * RESULT_EXPAND_SCALE + 1;
+                });
+            }
+
             _.each(hit.objects, function(o) { o.alpha = alpha; });
         }
 
